@@ -33,12 +33,9 @@ class _LayoutState extends State<Layout> {
       appBar: AppBar(
         backgroundColor: Color(0xFF172D46),
         flexibleSpace: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
           child: Column(
             children: [
-              SizedBox(
-                height: 20,
-              ),
               Row(
                 children: [
                   CircleAvatar(
