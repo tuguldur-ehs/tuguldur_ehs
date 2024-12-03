@@ -33,10 +33,12 @@ class _LayoutState extends State<Layout> {
       appBar: AppBar(
         backgroundColor: Color(0xFF172D46),
         flexibleSpace: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 children: [
                   CircleAvatar(
@@ -62,7 +64,7 @@ class _LayoutState extends State<Layout> {
                   ),
                   Spacer(),
                   Text(
-                    bottomNavController.tokenInfo.value,
+                    'Hi ${bottomNavController.tokenInfo.value}',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -70,7 +72,7 @@ class _LayoutState extends State<Layout> {
                   ),
                   SizedBox(width: 8),
                   CircleAvatar(
-                    radius: 33,
+                    radius: 30,
                     backgroundImage: AssetImage('assets/profileImg.png'),
                   ),
                 ],
@@ -84,6 +86,8 @@ class _LayoutState extends State<Layout> {
       ),
       bottomNavigationBar: Obx(
         () => CurvedNavigationBar(
+          backgroundColor: Color(0xFF172D46),
+          // color: Color(0xFF7EF0CE),
           index: bottomNavController.selectedIndex.value,
           onTap: bottomNavController.changeTabIndex,
           items: const [

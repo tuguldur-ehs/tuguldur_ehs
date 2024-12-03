@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hab_security_fornt/core/api/register_api.dart';
-import 'package:hab_security_fornt/core/model/register_model.dart';
+import 'package:hab_security_fornt/pages/auth/register_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -20,7 +16,8 @@ const List<String> list = <String>[
 ];
 
 class _RegisterPageState extends State<RegisterPage> {
-  RegisterModel? registerData;
+  late final RegisterBloc _bloc;
+
   final _formkey = GlobalKey<FormState>();
   final _fisrtnameCtrl = TextEditingController();
   final _lastnameCtrl = TextEditingController();
@@ -33,38 +30,87 @@ class _RegisterPageState extends State<RegisterPage> {
   Color dynamicColor = Colors.red;
   String _userDesc = "";
   String _status = "";
-  void onSubmit(context) async {
-    try {
-      registerData = await RegisterApi().getRegisterData(
-          _fisrtnameCtrl.value.text,
-          _lastnameCtrl.value.text,
-          _emailCtrl.value.text,
-          _passCtrl.value.text,
-          _confirmationPasswordCtrl.value.text,
-          role);
-      if (registerData?.message == "success") {
-        setState(() {
-          showCupertinoDialog(context: context, builder: doneDialog);
-          dynamicColor = Colors.green;
-          _userTitle = "Амжилттай";
-          _userDesc = "Амжиллтай бүртгэгдлээ";
-          _status = "200";
-        });
-      }
-    } on DioException catch (e) {
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = RegisterBloc();
+    initControls();
+  }
+
+  void initControls() {
+    _fisrtnameCtrl.text = '';
+    _lastnameCtrl.text = '';
+    _emailCtrl.text = '';
+    _passCtrl.text = '';
+    _confirmationPasswordCtrl.text = '';
+    String role = list.first;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<RegisterBloc>(
+      create: (context) => _bloc,
+      child: BlocListener<RegisterBloc, RegisterState>(
+        listener: _blocListener,
+        child: BlocBuilder<RegisterBloc, RegisterState>(
+          builder: _blocBuilder,
+        ),
+      ),
+    );
+  }
+
+  // void onSubmit(context) async {
+  //   try {
+  //     registerData = await RegisterApi().getRegisterData(
+  //         _fisrtnameCtrl.value.text,
+  //         _lastnameCtrl.value.text,
+  //         _emailCtrl.value.text,
+  //         _passCtrl.value.text,
+  //         _confirmationPasswordCtrl.value.text,
+  //         role);
+  //     if (registerData?.statusCode == 201) {
+  //       setState(() {
+  //         showCupertinoDialog(context: context, builder: doneDialog);
+  //         dynamicColor = Colors.green;
+  //         _userTitle = "Амжилттай";
+  //         _userDesc = "Амжиллтай бүртгэгдлээ";
+  //         _status = "200";
+  //       });
+  //     }
+  //   } on DioException catch (e) {
+  //     setState(() {
+  //       showCupertinoDialog(context: context, builder: doneDialog);
+  //       dynamicColor = Colors.red;
+  //       _userTitle = "Амжилтгүй";
+  //       _userDesc = e.response?.data['message'];
+  //       _status = "500";
+  //     });
+  //   }
+  // }
+
+  void _blocListener(BuildContext context, RegisterState state) {
+    if (state is RegisterLoading) {
+      print('Loafing');
+    } else if (state is RegisterSuccess) {
       setState(() {
         showCupertinoDialog(context: context, builder: doneDialog);
-
+        dynamicColor = Colors.green;
+        _userTitle = "Амжилттай";
+        _userDesc = "Амжиллтай бүртгэгдлээ";
+        _status = "200";
+      });
+    } else if (state is RegisterFailure) {
+      setState(() {
+        showCupertinoDialog(context: context, builder: doneDialog);
         dynamicColor = Colors.red;
         _userTitle = "Амжилтгүй";
-        _userDesc = e.response?.data['message'];
         _status = "500";
       });
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _blocBuilder(BuildContext context, RegisterState state) {
     return Scaffold(
       backgroundColor: Color(0xFF172D46),
       appBar: AppBar(
@@ -228,7 +274,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 onTap: () => {
                   if (_formkey.currentState!.validate())
                     {
-                      onSubmit(context),
+                      context.read<RegisterBloc>().add(
+                            RegisterSubmitEvent(
+                              firstname: _fisrtnameCtrl.text,
+                              lastname: _lastnameCtrl.text,
+                              email: _emailCtrl.text,
+                              password: _passCtrl.text,
+                              confirmationPassword:
+                                  _confirmationPasswordCtrl.text,
+                              role: list.first,
+                            ),
+                          ),
+                      print("wleflwelfwef--${list.first}")
                     },
                 },
                 child: Container(
@@ -265,7 +322,6 @@ class _RegisterPageState extends State<RegisterPage> {
           CupertinoDialogAction(
             child: const Text("Болсон"),
             onPressed: () => {
-              Navigator.pop(context),
               Navigator.pop(context),
             },
           ),

@@ -10,7 +10,7 @@ class HomeScreen extends GetWidget<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Text('home'),
+        child: Center(child: Text('home')),
       ),
     );
 

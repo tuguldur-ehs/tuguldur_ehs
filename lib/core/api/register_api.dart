@@ -35,6 +35,9 @@ class RegisterApi {
         "confirmationPassword": confirmationPassword,
         "role": role
       }),
+      options: Options(headers: {
+        "Content-Type": "application/json",
+      })
     );
 
     // Map<String, dynamic> data = response.data;

@@ -17,8 +17,8 @@ class TokenPreference {
 
   static String? getToken() => _preferences?.getString(_key);
 
-  static Future setUserId(String id) async =>
-      await _preferences?.setString(_userKey, id);
+  static Future setUserId(int id) async =>
+      await _preferences?.setInt(_userKey, id);
 
   static String? getUserId() => _preferences?.getString(_userKey);
 }

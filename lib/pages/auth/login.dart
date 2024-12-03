@@ -8,6 +8,9 @@ import 'package:hab_security_fornt/core/model/login_model.dart';
 import 'package:hab_security_fornt/core/utils/token_preference.dart';
 import 'package:hab_security_fornt/pages/auth/register.dart';
 import 'package:hab_security_fornt/pages/layout/layout.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,9 +22,44 @@ class LoginPage extends StatefulWidget {
 LoginModel? loginData;
 
 class _LoginPageState extends State<LoginPage> {
+  late final LoginBloc _bloc;
+
   final _formkey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = LoginBloc(loginApi: LoginApi());
+    initControls();
+  }
+
+  void initControls() {
+    _emailCtrl.text = '';
+    _passCtrl.text = '';
+  }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    _emailCtrl.dispose();
+    _passCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<LoginBloc>(
+      create: (context) => _bloc,
+      child: BlocListener<LoginBloc, LoginState>(
+        listener: _blocListener,
+        child: BlocBuilder<LoginBloc, LoginState>(
+          builder: _blocBuilder,
+        ),
+      ),
+    );
+  }
 
   String _userTitle = "";
   Color dynamicColor = Colors.red;
@@ -61,8 +99,35 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  void _blocListener(BuildContext context, LoginState state) {
+    if (state is LoginLoading) {
+      print('wefwe');
+    } else if (state is LoginSuccess) {
+      String? token = TokenPreference.getToken();
+      if (token == null || token.isEmpty) {
+        setState(() {
+          showCupertinoDialog(context: context, builder: doneDialog);
+          dynamicColor = Colors.red;
+          _userTitle = "wefwfwefwe";
+          _userDesc = "Алдаа гарлаа";
+          _status = "200";
+        });
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: ((context) => Layout())));
+      }
+    } else if (state is LoginFailure) {
+      setState(() {
+        showCupertinoDialog(context: context, builder: doneDialog);
+        dynamicColor = Colors.red;
+        _userTitle = "Амжилтгүй";
+        _userDesc = "Server internal error";
+        _status = "500";
+      });
+    }
+  }
+
+  Widget _blocBuilder(BuildContext context, LoginState state) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0xFF172D46),
@@ -153,9 +218,13 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         GestureDetector(
                             onTap: () => {
-                                  if (_formkey.currentState!.validate())
-                                    {
-                                      onSubmit(context),
+                                  if (_formkey.currentState!.validate()) {
+                                      context.read<LoginBloc>().add(
+                                            LoginSubmitted(
+                                              email: _emailCtrl.text,
+                                              password: _passCtrl.text,
+                                            ),
+                                          ),
                                     },
                                 },
                             child: Container(

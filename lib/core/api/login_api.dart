@@ -7,7 +7,7 @@ import 'dio_client.dart';
 class LoginApi {
   final Dio _dio = DioClient().getInstance();
 
-  Future<LoginModel> getLoginData(String email, String password) async {
+  Future<LoginModel> getLoginData(String? email, String? password) async {
     LoginModel? authData;
 
     Response response = await _dio.post(
@@ -29,7 +29,7 @@ class LoginApi {
 
     await TokenPreference.setToken(token);
 
-    await TokenPreference.setUserId(id.toString());
+    await TokenPreference.setUserId(id);
     authData = LoginModel.fromJson(data);
 
     return authData;
