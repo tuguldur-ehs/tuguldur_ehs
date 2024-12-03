@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           showCupertinoDialog(context: context, builder: doneDialog);
           dynamicColor = Colors.red;
-          _userTitle = "Амжилтгүй";
+          _userTitle = "wefwfwefwe";
           _userDesc = "Алдаа гарлаа";
           _status = "200";
         });
