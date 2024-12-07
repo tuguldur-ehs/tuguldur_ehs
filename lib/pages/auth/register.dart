@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hab_security_fornt/pages/auth/register_bloc.dart';
 
+import '../widgets/loader.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -90,9 +92,8 @@ class _RegisterPageState extends State<RegisterPage> {
   // }
 
   void _blocListener(BuildContext context, RegisterState state) {
-    if (state is RegisterLoading) {
-      print('Loafing');
-    } else if (state is RegisterSuccess) {
+    fullLoader(state is RegisterLoading);
+    if (state is RegisterSuccess) {
       setState(() {
         showCupertinoDialog(context: context, builder: doneDialog);
         dynamicColor = Colors.green;

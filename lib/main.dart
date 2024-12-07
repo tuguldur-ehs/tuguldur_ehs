@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:hab_security_fornt/core/utils/token_preference.dart';
@@ -14,6 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      navigatorObservers: [BotToastNavigatorObserver()],
+      builder: BotToastInit(),
       debugShowCheckedModeBanner: false,
       home: SplashPage(),
       theme: ThemeData(

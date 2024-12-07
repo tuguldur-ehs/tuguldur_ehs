@@ -10,6 +10,7 @@ import 'package:hab_security_fornt/pages/auth/register.dart';
 import 'package:hab_security_fornt/pages/layout/layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widgets/loader.dart';
 import 'login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -100,9 +101,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _blocListener(BuildContext context, LoginState state) {
-    if (state is LoginLoading) {
-      print('wefwe');
-    } else if (state is LoginSuccess) {
+    fullLoader (state is LoginLoading);
+    if (state is LoginSuccess) {
       String? token = TokenPreference.getToken();
       if (token == null || token.isEmpty) {
         setState(() {
