@@ -26,8 +26,8 @@ class _LoginPageState extends State<LoginPage> {
   late final LoginBloc _bloc;
 
   final _formkey = GlobalKey<FormState>();
-  final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
+  final TextEditingController _emailCtrl = TextEditingController();
+  final TextEditingController _passCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _blocListener(BuildContext context, LoginState state) {
-    fullLoader (state is LoginLoading);
+    fullLoader(state is LoginLoading);
     if (state is LoginSuccess) {
       String? token = TokenPreference.getToken();
       if (token == null || token.isEmpty) {
@@ -114,7 +114,11 @@ class _LoginPageState extends State<LoginPage> {
         });
       } else {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: ((context) => Layout())));
+          context,
+          MaterialPageRoute(
+            builder: ((context) => Layout()),
+          ),
+        );
       }
     } else if (state is LoginFailure) {
       setState(() {
@@ -218,14 +222,16 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         GestureDetector(
                             onTap: () => {
-                                  if (_formkey.currentState!.validate()) {
-                                      context.read<LoginBloc>().add(
-                                            LoginSubmitted(
-                                              email: _emailCtrl.text,
-                                              password: _passCtrl.text,
-                                            ),
-                                          ),
-                                    },
+                              Get.to(Layout()),
+                                  // if (_formkey.currentState!.validate())
+                                  //   {
+                                  //     context.read<LoginBloc>().add(
+                                  //           LoginSubmitted(
+                                  //             email: _emailCtrl.text,
+                                  //             password: _passCtrl.text,
+                                  //           ),
+                                  //         ),
+                                  //   },
                                 },
                             child: Container(
                               padding: EdgeInsets.all(15),
