@@ -67,38 +67,38 @@ class _LoginPageState extends State<LoginPage> {
   String _userDesc = "";
   String _status = "";
 
-  void onSubmit(context) async {
-    try {
-      loginData = await LoginApi().getLoginData(
-        _emailCtrl.value.text,
-        _passCtrl.value.text,
-      );
-
-      String? token = await TokenPreference.getToken();
-      // log("token=====>$token");
-      if (token == null || token.isEmpty) {
-        setState(() {
-          showCupertinoDialog(context: context, builder: doneDialog);
-          dynamicColor = Colors.red;
-          _userTitle = "wefwfwefwe";
-          _userDesc = "Алдаа гарлаа";
-          _status = "200";
-        });
-      } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: ((context) => Layout())));
-      }
-    } on Error catch (e) {
-      print("errorrr=====>${e}");
-      setState(() {
-        showCupertinoDialog(context: context, builder: doneDialog);
-        dynamicColor = Colors.red;
-        _userTitle = "Амжилтгүй";
-        _userDesc = "Server internal error";
-        _status = "500";
-      });
-    }
-  }
+  // void onSubmit(context) async {
+  //   try {
+  //     loginData = await LoginApi().getLoginData(
+  //       _emailCtrl.value.text,
+  //       _passCtrl.value.text,
+  //     );
+  //
+  //     String? token = await TokenPreference.getToken();
+  //     // log("token=====>$token");
+  //     if (token == null || token.isEmpty) {
+  //       setState(() {
+  //         showCupertinoDialog(context: context, builder: doneDialog);
+  //         dynamicColor = Colors.red;
+  //         _userTitle = "wefwfwefwe";
+  //         _userDesc = "Алдаа гарлаа";
+  //         _status = "200";
+  //       });
+  //     } else {
+  //       Navigator.pushReplacement(
+  //           context, MaterialPageRoute(builder: ((context) => Layout())));
+  //     }
+  //   } on Error catch (e) {
+  //     print("errorrr=====>${e}");
+  //     setState(() {
+  //       showCupertinoDialog(context: context, builder: doneDialog);
+  //       dynamicColor = Colors.red;
+  //       _userTitle = "Амжилтгүй";
+  //       _userDesc = "Server internal error";
+  //       _status = "500";
+  //     });
+  //   }
+  // }
 
   void _blocListener(BuildContext context, LoginState state) {
     fullLoader(state is LoginLoading);
@@ -222,16 +222,16 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         GestureDetector(
                             onTap: () => {
-                              Get.to(Layout()),
-                                  // if (_formkey.currentState!.validate())
-                                  //   {
-                                  //     context.read<LoginBloc>().add(
-                                  //           LoginSubmitted(
-                                  //             email: _emailCtrl.text,
-                                  //             password: _passCtrl.text,
-                                  //           ),
-                                  //         ),
-                                  //   },
+                              // Get.to(Layout()),
+                                  if (_formkey.currentState!.validate())
+                                    {
+                                      context.read<LoginBloc>().add(
+                                            LoginSubmitted(
+                                              email: _emailCtrl.text,
+                                              password: _passCtrl.text,
+                                            ),
+                                          ),
+                                    },
                                 },
                             child: Container(
                               padding: EdgeInsets.all(15),

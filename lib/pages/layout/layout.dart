@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:hab_security_fornt/pages/home/view/home_screen.dart';
@@ -26,6 +27,24 @@ class _LayoutState extends State<Layout> {
     FilePage(),
     ProfilePage(),
   ];
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialog(
+        title: 'Та системээс гарахдаа итгэлтэй байна уу?',
+        message: 'Та өөрийн хаягаас гарсан байх болно.',
+        confirmButtonText: 'Гарах',
+        cancelButtonText: 'Болих',
+        onConfirm: () async {
+          // await TokenPreference().clearTokens();
+          SystemNavigator.pop();
+        },
+        onCancel: () {},
+      ),
+    )) ??
+        false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +115,77 @@ class _LayoutState extends State<Layout> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class CustomDialog extends StatelessWidget {
+  final String title;
+  final String message;
+  final String confirmButtonText;
+  final String cancelButtonText;
+  final VoidCallback onConfirm;
+  final VoidCallback onCancel;
+
+  const CustomDialog({
+    Key? key,
+    required this.title,
+    required this.message,
+    required this.confirmButtonText,
+    required this.cancelButtonText,
+    required this.onConfirm,
+    required this.onCancel,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.black26,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      title: Text(
+        maxLines: 2,
+        title,
+        style: TextStyle(
+          color: Colors.white
+        ),
+      ),
+      content: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Text(
+          message,
+          style: TextStyle(fontSize: 13, color: Colors.white),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            onCancel();
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            cancelButtonText,
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            onConfirm();
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            confirmButtonText,
+            style: TextStyle(
+              color: Colors.green,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

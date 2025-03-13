@@ -24,7 +24,7 @@ void fullLoader(bool status, {bool loaderHasShown = false}) {
                 ),
                 child: Center(
                   child: Lottie.asset(
-                    'assets/love.json',
+                    'assets/loader.json',
                   ),
                 )),
           );

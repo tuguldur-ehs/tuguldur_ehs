@@ -35,10 +35,12 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       if (registerResponse.message == "success") {
         emit(RegisterSuccess(message: registerResponse.message ?? ''));
       } else {
+        print('wefwf');
         emit(RegisterFailure(
             message: registerResponse.message ?? 'Sign Up Error'));
       }
     } catch (e) {
+      print('tgtgtg');
       emit(RegisterFailure(message: 'Catch Error occurred: $e'));
     }
   }
